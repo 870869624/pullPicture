@@ -10,12 +10,12 @@ type Config struct {
 		Host string `default:"localhost"`
 	}
 	Database struct {
-		Type     string `default:"postgres"`
-		Host     string `default:"localhost"`
-		Port     string `default:"5432"`
-		Name     string `default:"postgres"`
-		User     string `default:"postgres"`
-		Password string `default:"password"`
+		Type     string `default:"mysql"`
+		Host     string `default:"113.44.79.143"`
+		Port     string `default:"3306"`
+		Name     string `default:"pullpicture"`
+		User     string `default:"pullpicture"`
+		Password string `default:"EHWWxrhJthEHy5Ez"`
 		SSLMode  string `default:"disable"`
 	}
 }

@@ -3,8 +3,9 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"pullpicture/backend/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetPictures(c *gin.Context) {

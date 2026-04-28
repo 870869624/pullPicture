@@ -14,6 +14,12 @@ func SetupRouter() *gin.Engine {
 		})
 	})
 
+	auth := r.Group("/auth")
+	{
+		auth.POST("/register", controllers.Register)
+		auth.POST("/login", controllers.Login)
+	}
+
 	pictures := r.Group("/pictures")
 	{
 		pictures.GET("", controllers.GetPictures)

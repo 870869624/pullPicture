@@ -1,22 +1,19 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
 	"pullpicture/backend/conf"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 )
 
 var DB *gorm.DB
 
 func InitDB() error {
 	config := conf.AppConfig.Database
-	dsn := "host=" + config.Host + 
-		" port=" + config.Port + 
-		" user=" + config.User + 
-		" dbname=" + config.Name + 
-		" password=" + config.Password + 
-		" sslmode=" + config.SSLMode
+	dsn := config.User + ":" + config.Password + "@tcp(" + config.Host + ":" + config.Port + ")/" + config.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
 
-	db, err := gorm.Open("postgres", dsn)
+	db, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		return err
 	}
@@ -31,4 +28,12 @@ type Picture struct {
 	URL      string `json:"url"`
 	Title    string `json:"title"`
 	Category string `json:"category"`
+}
+
+type User struct {
+	gorm.Model
+	Username string `json:"username" gorm:"unique;not null"`
+	Password string `json:"password" gorm:"not null"`
+	Email    string `json:"email"`
+	Role     string `json:"role" gorm:"default:'user'"`
 }

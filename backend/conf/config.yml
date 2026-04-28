@@ -3,10 +3,10 @@ server:
   host: localhost
 
 database:
-  type: postgres
-  host: localhost
-  port: 5432
-  name: postgres
-  user: postgres
-  password: password
+  type: mysql
+  host: 113.44.79.143
+  port: 3306
+  name: pullpicture
+  user: pullpicture
+  password: EWHWxrhJthEHy5Ez
   ssl_mode: disable
