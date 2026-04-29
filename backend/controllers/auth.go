@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"pullpicture/backend/models"
+	"pullpicture/models"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"

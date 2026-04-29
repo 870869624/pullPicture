@@ -1,7 +1,7 @@
 package models
 
 import (
-	"pullpicture/backend/conf"
+	"pullpicture/conf"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"

@@ -1,60 +1,76 @@
 <template>
-  <div class="container">
-    <div class="background"></div>
-    <div class="content">
-      <h1 class="title">内部拉入系统</h1>
-      <div class="login-card">
-        <div class="card-header">
-          <h2>欢迎登录</h2>
-          <p>请输入您的账号信息</p>
+  <div class="app">
+    <template v-if="!isLoggedIn">
+      <div class="login-container">
+        <div class="background"></div>
+        <div class="content">
+          <h1 class="title">内部拉入系统</h1>
+          <div class="login-card">
+            <div class="card-header">
+              <h2>欢迎登录</h2>
+              <p>请输入您的账号信息</p>
+            </div>
+            <form @submit.prevent="handleLogin" class="login-form">
+              <div class="form-group">
+                <label for="username">用户名</label>
+                <div class="input-wrapper">
+                  <span class="icon">👤</span>
+                  <input 
+                    type="text" 
+                    id="username" 
+                    v-model="username" 
+                    placeholder="请输入用户名"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="password">密码</label>
+                <div class="input-wrapper">
+                  <span class="icon">🔒</span>
+                  <input 
+                    type="password" 
+                    id="password" 
+                    v-model="password" 
+                    placeholder="请输入密码"
+                    required
+                  />
+                </div>
+              </div>
+              <button type="submit" class="login-btn" :disabled="loading">
+                <span v-if="loading" class="spinner"></span>
+                {{ loading ? '登录中...' : '登 录' }}
+              </button>
+            </form>
+            <div v-if="error" class="error-message">{{ error }}</div>
+            <div v-if="success" class="success-message">{{ success }}</div>
+          </div>
         </div>
-        <form @submit.prevent="handleLogin" class="login-form">
-          <div class="form-group">
-            <label for="username">用户名</label>
-            <div class="input-wrapper">
-              <span class="icon">👤</span>
-              <input 
-                type="text" 
-                id="username" 
-                v-model="username" 
-                placeholder="请输入用户名"
-                required
-              />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="password">密码</label>
-            <div class="input-wrapper">
-              <span class="icon">🔒</span>
-              <input 
-                type="password" 
-                id="password" 
-                v-model="password" 
-                placeholder="请输入密码"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit" class="login-btn" :disabled="loading">
-            <span v-if="loading" class="spinner"></span>
-            {{ loading ? '登录中...' : '登 录' }}
-          </button>
-        </form>
-        <div v-if="error" class="error-message">{{ error }}</div>
-        <div v-if="success" class="success-message">{{ success }}</div>
       </div>
-    </div>
+    </template>
+    
+    <template v-else>
+      <div class="main-layout">
+        <Sidebar :activeMenu="activeMenu" @select="handleMenuSelect" @logout="handleLogout" />
+        <ContentArea :activeMenu="activeMenu" :username="currentUser" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import Sidebar from './components/Sidebar.vue'
+import ContentArea from './components/ContentArea.vue'
 
+const isLoggedIn = ref(false)
 const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const error = ref('')
 const success = ref('')
+const activeMenu = ref('ip-whitelist')
+const currentUser = ref('')
 
 const handleLogin = async () => {
   error.value = ''
@@ -77,10 +93,11 @@ const handleLogin = async () => {
 
     if (response.ok) {
       success.value = `登录成功！欢迎, ${data.user.username}`
-      console.log('登录成功:', data)
+      currentUser.value = data.user.username
       setTimeout(() => {
+        isLoggedIn.value = true
         success.value = ''
-      }, 3000)
+      }, 1000)
     } else {
       error.value = data.error || '登录失败'
     }
@@ -91,6 +108,17 @@ const handleLogin = async () => {
     loading.value = false
   }
 }
+
+const handleMenuSelect = (menuId) => {
+  activeMenu.value = menuId
+}
+
+const handleLogout = () => {
+  isLoggedIn.value = false
+  username.value = ''
+  password.value = ''
+  activeMenu.value = 'ip-whitelist'
+}
 </script>
 
 <style>
@@ -100,7 +128,11 @@ const handleLogin = async () => {
   box-sizing: border-box;
 }
 
-.container {
+.app {
+  min-height: 100vh;
+}
+
+.login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -118,6 +150,7 @@ const handleLogin = async () => {
   bottom: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   animation: gradientShift 15s ease infinite;
+  background-size: 200% 200%;
 }
 
 @keyframes gradientShift {
@@ -331,6 +364,11 @@ const handleLogin = async () => {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.main-layout {
+  display: flex;
+  min-height: 100vh;
 }
 
 @media (max-width: 480px) {

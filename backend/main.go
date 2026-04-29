@@ -2,10 +2,9 @@ package main
 
 import (
 	"log"
-
-	"pullpicture/backend/conf"
-	"pullpicture/backend/models"
-	"pullpicture/backend/routes"
+	"pullpicture/conf"
+	"pullpicture/models"
+	"pullpicture/routes"
 
 	"golang.org/x/crypto/bcrypt"
 )
